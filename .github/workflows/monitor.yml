@@ -20,7 +20,7 @@ jobs:
     outputs:
       list: ${{ steps.pick.outputs.list }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: pick
         env:
           REQUESTED: ${{ inputs.env }}
@@ -44,7 +44,7 @@ jobs:
       matrix:
         env: ${{ fromJSON(needs.environments.outputs.list) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

@@ -1,0 +1,27 @@
+{
+  "$schema": "../schemas/environment.schema.json",
+  "name": "production",
+  "kind": "lifetime",
+  "enabled": false,
+  "description": "Enterprise Production environment. Set baseUrl and lifetimeEnvironmentName, then enabled=true. Deployments require approval (GitHub Environment 'production').",
+  "baseUrl": "https://REPLACE_ME.outsystemsenterprise.com",
+  "lifetimeEnvironmentName": "Production",
+  "siteProperties": {
+    "HighAvailabilityMinPct": 50,
+    "LowAvailabilityMaxPct": 20,
+    "StaleAfterMinutes": 15,
+    "ReadingOutdatedMinutes": 60,
+    "CacheTtlSeconds": 60,
+    "MinRefreshIntervalSeconds": 15,
+    "CarparkInfoMaxAgeHours": 24,
+    "HdbCarparkInfoResourceId": "d_23f946fa557947f93a8043bbef41dd09"
+  },
+  "secrets": {
+    "DataGovApiKey": { "fromEnv": "CARPARK_DATAGOV_API_KEY", "required": true }
+  },
+  "checks": {
+    "minCarparks": 1500,
+    "requireLocationData": true,
+    "maxDataAgeMinutes": 15
+  }
+}

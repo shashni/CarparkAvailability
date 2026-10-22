@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://carpark-availability/infra/application.schema.json",
+  "title": "OutSystems application definition",
+  "type": "object",
+  "required": ["name", "lifetimeApplicationName", "modules", "paths", "siteProperties"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+    "description": { "type": "string" },
+    "lifetimeApplicationName": { "type": "string", "minLength": 1 },
+    "modules": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "oml", "manifest"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "key": { "type": "string", "pattern": "^[0-9a-f-]{36}$" },
+          "type": { "enum": ["Reactive", "Mobile", "Traditional", "Service", "ReactiveLibrary"] },
+          "oml": { "type": "string", "pattern": "\\.oml$" },
+          "manifest": { "type": "string", "pattern": "\\.json$" }
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "required": ["dashboard", "health"],
+      "properties": {
+        "dashboard": { "type": "string", "pattern": "^/" },
+        "health": { "type": "string", "pattern": "^/" }
+      }
+    },
+    "platformDependencies": { "type": "array", "items": { "type": "string" } },
+    "externalDependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "critical"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "pattern": "^https://" },
+          "integration": { "type": "string" },
+          "critical": { "type": "boolean" }
+        }
+      }
+    },
+    "siteProperties": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type", "description", "healthField"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "enum": ["integer", "decimal", "text", "boolean"] },
+          "secret": { "type": "boolean" },
+          "default": {},
+          "minimum": { "type": "number" },
+          "maximum": { "type": "number" },
+          "pattern": { "type": "string" },
+          "healthField": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    }
+  }
+}

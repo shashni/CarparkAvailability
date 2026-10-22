@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "data.gov.sg datastore_search response for HDB Carpark Information (fields the module consumes)",
+  "type": "object",
+  "required": ["success", "result"],
+  "properties": {
+    "success": { "const": true },
+    "result": {
+      "type": "object",
+      "required": ["records"],
+      "properties": {
+        "total": { "type": "integer" },
+        "records": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["car_park_no", "address", "car_park_type", "type_of_parking_system",
+                         "short_term_parking", "free_parking", "night_parking", "gantry_height"],
+            "properties": {
+              "car_park_no": { "type": "string", "minLength": 1 },
+              "address": { "type": "string" },
+              "x_coord": { "type": ["string", "number"] },
+              "y_coord": { "type": ["string", "number"] },
+              "car_park_type": { "type": "string" },
+              "type_of_parking_system": { "type": "string" },
+              "short_term_parking": { "type": "string" },
+              "free_parking": { "type": "string" },
+              "night_parking": { "type": "string" },
+              "car_park_decks": { "type": ["string", "number"] },
+              "gantry_height": { "type": ["string", "number"] },
+              "car_park_basement": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

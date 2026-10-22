@@ -1,0 +1,13 @@
+{
+  "$schema": "./schemas/pipeline.schema.json",
+  "description": "Promotion path through LifeTime. The personal environment is outside LifeTime and is verified, not deployed, by automation.",
+  "stages": [
+    { "from": "development", "to": "test", "requiresApproval": false, "createVersion": true },
+    { "from": "test", "to": "production", "requiresApproval": true, "createVersion": false }
+  ],
+  "deployment": {
+    "pollIntervalSeconds": 15,
+    "timeoutMinutes": 45,
+    "allowConflicts": false
+  }
+}

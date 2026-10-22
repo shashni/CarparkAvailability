@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://carpark-availability/infra/pipeline.schema.json",
+  "title": "LifeTime promotion pipeline",
+  "type": "object",
+  "required": ["stages", "deployment"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "description": { "type": "string" },
+    "stages": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "requiresApproval", "createVersion"],
+        "additionalProperties": false,
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "requiresApproval": { "type": "boolean" },
+          "createVersion": { "type": "boolean" }
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "required": ["pollIntervalSeconds", "timeoutMinutes", "allowConflicts"],
+      "additionalProperties": false,
+      "properties": {
+        "pollIntervalSeconds": { "type": "integer", "minimum": 1 },
+        "timeoutMinutes": { "type": "integer", "minimum": 1 },
+        "allowConflicts": { "type": "boolean" }
+      }
+    }
+  }
+}

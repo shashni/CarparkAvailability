@@ -1,0 +1,73 @@
+{
+  "module": "CarparkAvailability",
+  "moduleKey": "f7123d93-94ba-453b-a832-7476d7a6c976",
+  "type": "Reactive",
+  "exportedAt": "2026-10-22T09:51:35+00:00",
+  "exportedFrom": "personal",
+  "oml": {
+    "path": "src/oml/CarparkAvailability.oml",
+    "sha256": "8d5ac860d4c6711bcb532f573e299a2110a6b16db4c42dfe7f961936e2f8c345",
+    "bytes": 2310283
+  },
+  "snapshots": {
+    "action-AvailabilityStatus_Classify.cs": "30523d451ea6b11d3ecf6e46dbccfb2eece17b0e925cfefeb01654474e0b468c",
+    "action-Carpark_FetchAndMap.cs": "00aac39842d6a3cb6faff460c43db4b0f03c5bb2b843738a47d0582f296609a2",
+    "action-Carpark_GetAvailability.cs": "6f4ea6223810b4c90f7f7fa625dd672c34cac380cc194cf4991ef9f33f63bba2",
+    "action-CarparkInfo_EnsureFresh.cs": "c55ac506a0d3202e3c1b1493379397f1c1948f75c51710d17f6ef2d582abbdba",
+    "action-Snapshot_ToResult.cs": "1836c29e107b5f96da376d6397d5d5906f8a7a09e9c887837821e9611b9f63c5",
+    "data-model.cs": "615da3c06f398feb0af148b8546de662db5ec6eb6525062d4fe29a9b9cc04fe8",
+    "integrations.cs": "faab99745175231f774a56c0ab2a365e98179c8248b962468a353797d2425df6",
+    "inventory.json": "19372e0337b26af3e28b4d2494b39c5a18d54036dc3c462f8e3de338d8f31d5b",
+    "screen-Dashboard.cs": "dba8f437b1e1764439cd94eab3a3fedfbc821927d194966fa21ccd9fe862d721",
+    "site-properties.cs": "70bd990143ce49316c0cd911f27f5662db8fd722129ba8be0418d0fcefe40423",
+    "structures.cs": "2eb01db4d4e392e66ebd776883f5296052443e4e14c25b57b046c63a69c6c69a",
+    "theme-CarparkAvailability.cs": "b1996b1eb614dc84a3aa45ac6d41258cf3d908b1b20d5a02ef7b74fd37cf2c6e"
+  },
+  "inventory": {
+    "references": [
+      "(System)",
+      "OutSystemsCharts",
+      "OutSystemsMaps",
+      "OutSystemsUI",
+      "Users"
+    ],
+    "entities": [
+      "AvailabilitySnapshot",
+      "AvailabilityStatus",
+      "CarparkInfo",
+      "LotType",
+      "SortOption"
+    ],
+    "structures": [
+      "AvailabilityMeta",
+      "CarparkLotRow",
+      "HealthReport"
+    ],
+    "integrations": [
+      "CarparkOps",
+      "DataGovSG_Datastore",
+      "DataGovSG_Transport"
+    ],
+    "siteProperties": [
+      "CacheTtlSeconds",
+      "CarparkInfoMaxAgeHours",
+      "DataGovApiKey",
+      "HdbCarparkInfoResourceId",
+      "HighAvailabilityMinPct",
+      "LowAvailabilityMaxPct",
+      "MinRefreshIntervalSeconds",
+      "ReadingOutdatedMinutes",
+      "StaleAfterMinutes"
+    ],
+    "serverActions": [
+      "AvailabilityStatus_Classify",
+      "CarparkInfo_EnsureFresh",
+      "Carpark_FetchAndMap",
+      "Carpark_GetAvailability",
+      "Snapshot_ToResult"
+    ],
+    "screens": [
+      "Dashboard"
+    ]
+  }
+}

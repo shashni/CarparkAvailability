@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "timestamp": "2026-10-22T17:00:00+08:00",
+      "carpark_data": [
+        { "carpark_number": "", "update_datetime": "2026-10-22T16:59:00", "carpark_info": [{ "lot_type": "C", "lots_available": "5", "total_lots": "10" }] },
+        { "carpark_number": "NOLOTS", "update_datetime": "2026-10-22T16:59:00", "carpark_info": [] },
+        { "carpark_number": "BADNUM", "update_datetime": "2026-10-22T16:59:00", "carpark_info": [{ "lot_type": "C", "lots_available": "n/a", "total_lots": "10" }] },
+        { "carpark_number": "OVER", "update_datetime": "2026-10-22T16:59:00", "carpark_info": [{ "lot_type": "C", "lots_available": "12", "total_lots": "10" }] },
+        { "carpark_number": "mix1 ", "update_datetime": "2026-10-22T16:58:00", "carpark_info": [{ "lot_type": "Y", "lots_available": "4", "total_lots": "20" }, { "lot_type": "C", "lots_available": "0", "total_lots": "0" }] },
+        { "carpark_number": "EDGE", "update_datetime": "not-a-date", "carpark_info": [{ "lot_type": "C", "lots_available": "20", "total_lots": "100" }] },
+        { "carpark_number": "HALF", "update_datetime": "2026-10-22T16:59:30", "carpark_info": [{ "lot_type": "C", "lots_available": "50", "total_lots": "100" }] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "$schema": "./schemas/application.schema.json",
+  "name": "CarparkAvailability",
+  "description": "Singapore Carpark Availability dashboard (OutSystems 11, Reactive Web).",
+  "lifetimeApplicationName": "CarparkAvailability",
+  "modules": [
+    {
+      "name": "CarparkAvailability",
+      "key": "f7123d93-94ba-453b-a832-7476d7a6c976",
+      "type": "Reactive",
+      "oml": "src/oml/CarparkAvailability.oml",
+      "manifest": "src/module.manifest.json"
+    }
+  ],
+  "paths": {
+    "dashboard": "/CarparkAvailability/Dashboard",
+    "health": "/CarparkAvailability/rest/CarparkOps/Health"
+  },
+  "platformDependencies": ["(System)", "OutSystemsUI", "OutSystemsCharts", "OutSystemsMaps", "Users"],
+  "externalDependencies": [
+    {
+      "name": "data.gov.sg carpark availability",
+      "url": "https://api.data.gov.sg/v1/transport/carpark-availability",
+      "integration": "DataGovSG_Transport.GetCarparkAvailability",
+      "critical": true
+    },
+    {
+      "name": "data.gov.sg HDB Carpark Information",
+      "url": "https://data.gov.sg/api/action/datastore_search",
+      "integration": "DataGovSG_Datastore.SearchHdbCarparkInfo",
+      "critical": false
+    }
+  ],
+  "siteProperties": {
+    "HighAvailabilityMinPct": {
+      "type": "decimal", "default": 50, "minimum": 0, "maximum": 100, "healthField": "highAvailabilityMinPct",
+      "description": "A lot type is High availability when MORE than this percentage of lots is free."
+    },
+    "LowAvailabilityMaxPct": {
+      "type": "decimal", "default": 20, "minimum": 0, "maximum": 100, "healthField": "lowAvailabilityMaxPct",
+      "description": "Low availability below this percentage (with at least one free lot); Moderate between Low and High (inclusive)."
+    },
+    "StaleAfterMinutes": {
+      "type": "integer", "default": 15, "minimum": 1, "maximum": 1440, "healthField": "staleAfterMinutes",
+      "description": "Data older than this, measured from the data.gov.sg reading time, is labelled Stale."
+    },
+    "ReadingOutdatedMinutes": {
+      "type": "integer", "default": 60, "minimum": 1, "maximum": 10080, "healthField": "readingOutdatedMinutes",
+      "description": "A carpark reading this much older than the dataset timestamp is flagged as not recently updated."
+    },
+    "CacheTtlSeconds": {
+      "type": "integer", "default": 60, "minimum": 5, "maximum": 3600, "healthField": "cacheTtlSeconds",
+      "description": "How long a successful retrieval is reused before calling data.gov.sg again."
+    },
+    "MinRefreshIntervalSeconds": {
+      "type": "integer", "default": 15, "minimum": 0, "maximum": 3600, "healthField": "minRefreshIntervalSeconds",
+      "description": "Even a user-forced refresh reuses cached data younger than this (upstream burst protection)."
+    },
+    "CarparkInfoMaxAgeHours": {
+      "type": "integer", "default": 24, "minimum": 1, "maximum": 720, "healthField": "carparkInfoMaxAgeHours",
+      "description": "How often the HDB Carpark Information address cache is re-synchronised."
+    },
+    "HdbCarparkInfoResourceId": {
+      "type": "text", "default": "d_23f946fa557947f93a8043bbef41dd09", "pattern": "^d_[0-9a-f]{32}$",
+      "healthField": "hdbCarparkInfoResourceId",
+      "description": "data.gov.sg datastore resource id of the HDB Carpark Information dataset."
+    },
+    "DataGovApiKey": {
+      "type": "text", "secret": true, "default": "", "healthField": "dataGovApiKeyConfigured",
+      "description": "Optional data.gov.sg API key sent as x-api-key. Secret: never stored in this repository."
+    }
+  }
+}

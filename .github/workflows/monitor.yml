@@ -1,0 +1,57 @@
+name: Monitor environments
+
+# Scheduled health, freshness and configuration-drift checks for every enabled environment.
+# Also run this manually right after publishing the personal environment from Service Studio.
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      env:
+        description: Environment to verify (blank = all enabled)
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  environments:
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.pick.outputs.list }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: pick
+        env:
+          REQUESTED: ${{ inputs.env }}
+        run: |
+          python - <<'EOF' >> "$GITHUB_OUTPUT"
+          import json, os, pathlib
+          enabled = [p.stem for p in sorted(pathlib.Path("infra/environments").glob("*.json"))
+                     if json.loads(p.read_text())["enabled"]]
+          requested = os.environ.get("REQUESTED", "").strip()
+          if requested and requested not in enabled:
+              raise SystemExit(f"'{requested}' is not an enabled environment: {enabled}")
+          print("list=" + json.dumps([requested] if requested else enabled))
+          EOF
+
+  verify:
+    needs: environments
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        env: ${{ fromJSON(needs.environments.outputs.list) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e .
+      - name: Verify ${{ matrix.env }}
+        env:
+          CARPARK_DATAGOV_API_KEY: ${{ secrets.CARPARK_DATAGOV_API_KEY }}
+          TARGET_ENV: ${{ matrix.env }}
+        run: carpark-ops verify --env "$TARGET_ENV"

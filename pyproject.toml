@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "carpark-ops"
+version = "1.0.0"
+description = "Infrastructure-as-code, deployment automation and validation for the Singapore Carpark Availability OutSystems 11 application."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "jsonschema>=4.21",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "responses>=0.25",
+    "ruff>=0.6",
+    "pyyaml>=6.0",
+]
+e2e = [
+    "playwright>=1.45",
+]
+
+[project.scripts]
+carpark-ops = "carpark_ops.cli:main"
+
+[tool.setuptools]
+packages = ["carpark_ops"]
+
+[tool.setuptools.package-data]
+carpark_ops = ["schemas/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers -m 'not contract and not smoke and not e2e'"
+markers = [
+    "contract: live calls to data.gov.sg (run with -m contract)",
+    "smoke: live checks against a deployed environment (needs CARPARK_ENV)",
+    "e2e: browser tests against a deployed environment (needs Playwright and CARPARK_ENV)",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = ["S101", "E501"]  # line length is owned by `ruff format`
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]

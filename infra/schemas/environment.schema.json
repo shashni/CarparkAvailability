@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://carpark-availability/infra/environment.schema.json",
+  "title": "Environment desired state",
+  "type": "object",
+  "required": ["name", "kind", "enabled", "baseUrl", "siteProperties", "secrets", "checks"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "kind": { "enum": ["personal", "lifetime"] },
+    "enabled": { "type": "boolean" },
+    "description": { "type": "string" },
+    "baseUrl": { "type": "string", "pattern": "^https://[^/]+$" },
+    "lifetimeEnvironmentName": { "type": "string", "minLength": 1 },
+    "siteProperties": {
+      "type": "object",
+      "additionalProperties": { "type": ["number", "string", "boolean"] }
+    },
+    "secrets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["fromEnv", "required"],
+        "additionalProperties": false,
+        "properties": {
+          "fromEnv": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+          "required": { "type": "boolean" }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "required": ["minCarparks", "requireLocationData", "maxDataAgeMinutes"],
+      "additionalProperties": false,
+      "properties": {
+        "minCarparks": { "type": "integer", "minimum": 0 },
+        "requireLocationData": { "type": "boolean" },
+        "maxDataAgeMinutes": { "type": "integer", "minimum": 1 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "lifetime" } } },
+      "then": { "required": ["lifetimeEnvironmentName"] }
+    }
+  ]
+}

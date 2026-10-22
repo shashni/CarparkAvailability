@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+# OutSystems module source is a binary package: never diff, merge or normalise it.
+# Review changes through the text snapshots in src/model/ instead.
+*.oml binary
+*.oap binary
+
+*.ps1 text eol=crlf
+*.png binary

@@ -1,0 +1,26 @@
+{
+  "$schema": "../schemas/environment.schema.json",
+  "name": "personal",
+  "kind": "personal",
+  "enabled": true,
+  "description": "OutSystems personal environment. No LifeTime: publish from Service Studio, then run `carpark-ops verify --env personal`.",
+  "baseUrl": "https://personal-uzbke9gg.outsystemscloud.com",
+  "siteProperties": {
+    "HighAvailabilityMinPct": 50,
+    "LowAvailabilityMaxPct": 20,
+    "StaleAfterMinutes": 15,
+    "ReadingOutdatedMinutes": 60,
+    "CacheTtlSeconds": 60,
+    "MinRefreshIntervalSeconds": 15,
+    "CarparkInfoMaxAgeHours": 24,
+    "HdbCarparkInfoResourceId": "d_23f946fa557947f93a8043bbef41dd09"
+  },
+  "secrets": {
+    "DataGovApiKey": { "fromEnv": "CARPARK_DATAGOV_API_KEY", "required": false }
+  },
+  "checks": {
+    "minCarparks": 1500,
+    "requireLocationData": true,
+    "maxDataAgeMinutes": 15
+  }
+}

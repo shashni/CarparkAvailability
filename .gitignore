@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+build/
+dist/
+
+# Local secrets and overrides (never commit tokens or API keys)
+.env
+.env.*
+!.env.example
+infra/environments/*.local.json
+
+# Test and tool output
+reports/
+playwright-report/
+test-results/
+
+# Service Studio temp files
+*.oml.bak
+*.oml.tmp
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

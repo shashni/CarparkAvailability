@@ -1,0 +1,27 @@
+{
+  "$schema": "../schemas/environment.schema.json",
+  "name": "development",
+  "kind": "lifetime",
+  "enabled": false,
+  "description": "Enterprise Development environment. Set baseUrl and lifetimeEnvironmentName, then enabled=true.",
+  "baseUrl": "https://dev-REPLACE_ME.outsystemsenterprise.com",
+  "lifetimeEnvironmentName": "Development",
+  "siteProperties": {
+    "HighAvailabilityMinPct": 50,
+    "LowAvailabilityMaxPct": 20,
+    "StaleAfterMinutes": 15,
+    "ReadingOutdatedMinutes": 60,
+    "CacheTtlSeconds": 60,
+    "MinRefreshIntervalSeconds": 15,
+    "CarparkInfoMaxAgeHours": 24,
+    "HdbCarparkInfoResourceId": "d_23f946fa557947f93a8043bbef41dd09"
+  },
+  "secrets": {
+    "DataGovApiKey": { "fromEnv": "CARPARK_DATAGOV_API_KEY", "required": false }
+  },
+  "checks": {
+    "minCarparks": 1500,
+    "requireLocationData": false,
+    "maxDataAgeMinutes": 15
+  }
+}

@@ -1,0 +1,31 @@
+name: Upstream contract (data.gov.sg)
+
+# Detects breaking changes in the external APIs before users do.
+on:
+  schedule:
+    - cron: "0 1 * * *"   # 09:00 SGT daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - name: Contract tests
+        env:
+          CARPARK_DATAGOV_API_KEY: ${{ secrets.CARPARK_DATAGOV_API_KEY }}
+        run: pytest -m contract -o addopts="-ra --strict-markers" tests/contract --junitxml=reports/contract.xml
+      - name: Probe summary
+        if: always()
+        env:
+          CARPARK_DATAGOV_API_KEY: ${{ secrets.CARPARK_DATAGOV_API_KEY }}
+        run: carpark-ops probe-source --env personal

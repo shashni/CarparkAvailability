@@ -1,0 +1,114 @@
+name: Deploy (LifeTime)
+
+# Promotes the application between LifeTime environments, then verifies the target.
+# Approvals: configure GitHub Environments "test" and "production" (Settings > Environments) with
+# required reviewers; the deploy job waits there before touching LifeTime.
+# Inputs reach shell steps only through environment variables (never ${{ }} inside `run:`), so free-text
+# fields such as the notes cannot inject commands.
+on:
+  workflow_dispatch:
+    inputs:
+      from:
+        description: Source environment
+        type: choice
+        options: [development, test]
+        required: true
+      to:
+        description: Target environment
+        type: choice
+        options: [test, production]
+        required: true
+      version:
+        description: Version to tag when the stage creates one (e.g. 1.4.0)
+        required: false
+      notes:
+        description: Deployment notes / change log
+        required: true
+      dry_run:
+        description: Plan only, do not deploy
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.to }}
+  cancel-in-progress: false   # never interrupt a running deployment
+
+env:
+  LIFETIME_URL: ${{ secrets.LIFETIME_URL }}
+  LIFETIME_TOKEN: ${{ secrets.LIFETIME_TOKEN }}
+  SOURCE_ENV: ${{ inputs.from }}
+  TARGET_ENV: ${{ inputs.to }}
+  VERSION: ${{ inputs.version }}
+  NOTES: ${{ inputs.notes }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - name: Validate
+        run: |
+          carpark-ops validate
+          pytest -q
+      - name: Plan
+        run: |
+          args=(--from "$SOURCE_ENV" --to "$TARGET_ENV" --notes "$NOTES")
+          if [ -n "$VERSION" ]; then args+=(--version "$VERSION"); fi
+          carpark-ops plan "${args[@]}"
+
+  deploy:
+    needs: plan
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: ${{ inputs.to }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e .
+      - name: Deploy through LifeTime
+        env:
+          RUN_INFO: "run ${{ github.run_id }} by ${{ github.actor }}"
+        run: |
+          args=(--from "$SOURCE_ENV" --to "$TARGET_ENV" --notes "$NOTES ($RUN_INFO)")
+          if [ -n "$VERSION" ]; then args+=(--version "$VERSION"); fi
+          carpark-ops deploy "${args[@]}"
+
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: |
+          pip install -e ".[dev,e2e]"
+          playwright install --with-deps chromium
+      - name: Health, configuration drift and rules parity
+        env:
+          CARPARK_DATAGOV_API_KEY: ${{ secrets.CARPARK_DATAGOV_API_KEY }}
+        run: carpark-ops verify --env "$TARGET_ENV"
+      - name: Smoke and browser tests
+        env:
+          CARPARK_DATAGOV_API_KEY: ${{ secrets.CARPARK_DATAGOV_API_KEY }}
+        run: CARPARK_ENV="$TARGET_ENV" pytest -m "smoke or e2e" -o addopts="-ra --strict-markers" tests/smoke tests/e2e --junitxml=reports/verify.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verify-${{ inputs.to }}
+          path: reports/

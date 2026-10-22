@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CarparkOps/Health response (after defaults for omitted fields are filled in)",
+  "type": "object",
+  "required": ["status", "module", "snapshotAvailable", "carparkCount", "staleAfterMinutes", "cacheTtlSeconds"],
+  "additionalProperties": false,
+  "properties": {
+    "status": { "enum": ["ok", "stale", "no-data"] },
+    "module": { "type": "string" },
+    "snapshotAvailable": { "type": "boolean" },
+    "snapshotAgeSeconds": { "type": "integer" },
+    "dataAgeSeconds": { "type": "integer" },
+    "sourceTimestamp": { "type": "string" },
+    "carparkCount": { "type": "integer", "minimum": 0 },
+    "rejectedCount": { "type": "integer", "minimum": 0 },
+    "mergedRecordCount": { "type": "integer", "minimum": 0 },
+    "inconsistentLotCount": { "type": "integer", "minimum": 0 },
+    "hasLocationData": { "type": "boolean" },
+    "carparkInfoCount": { "type": "integer", "minimum": 0 },
+    "carparkInfoSyncAgeHours": { "type": "integer" },
+    "highAvailabilityMinPct": { "type": "number" },
+    "lowAvailabilityMaxPct": { "type": "number" },
+    "staleAfterMinutes": { "type": "integer" },
+    "readingOutdatedMinutes": { "type": "integer" },
+    "cacheTtlSeconds": { "type": "integer" },
+    "minRefreshIntervalSeconds": { "type": "integer" },
+    "carparkInfoMaxAgeHours": { "type": "integer" },
+    "hdbCarparkInfoResourceId": { "type": "string" },
+    "dataGovApiKeyConfigured": { "type": "boolean" }
+  }
+}

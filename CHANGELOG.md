@@ -3,6 +3,13 @@
 All notable changes to this application and its infrastructure code. Format: [Keep a Changelog](https://keepachangelog.com/),
 versions match the LifeTime application version tags.
 
+## [Unreleased]
+
+### Documentation
+- README rewritten for reviewers: live URL, screenshots, architecture, decision records (D1–D10), data integrity
+  rules, engineering practices, quality evidence, assumptions, limitations and trade-offs.
+- `scripts/capture_screenshots.py` regenerates `docs/images/` from a deployed environment.
+
 ## [1.0.0] - 2026-10-22
 
 ### Added
